@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090909">
+<title>Bia Prompts IA</title>
+<style>
+:root{--bg:#080808;--panel:#121212;--red:#f12b3d;--text:#f6f3f3;--muted:#9b9698;--line:#292326}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#3b0911 0,transparent 40%),var(--bg);color:var(--text);font-family:Arial,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.app{max-width:1180px;margin:auto;padding:22px 22px 100px}
+header{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:25px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#ff4858,#9c071a);display:grid;place-items:center;font-size:22px;font-weight:900}
+.brand h1{font-size:19px;margin:0}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:2px;margin-top:3px}
+.icon-btn,.admin-btn,.secondary{border:1px solid var(--line);background:#151315;color:white;border-radius:12px;padding:10px 13px}
+.admin-btn,.primary{background:var(--red);border:1px solid var(--red);color:white;font-weight:bold;border-radius:11px;padding:12px 16px}
+.hero{padding:24px 0 20px}.eyebrow{color:#ff6571;font-size:11px;font-weight:800;letter-spacing:2px}
+.hero h2{font-size:clamp(27px,5vw,43px);margin:9px 0}.hero h2 span{color:var(--red)}.hero p{color:var(--muted);font-size:14px;line-height:1.6}
+.search{margin:20px 0 15px}.search input,.field input,.field textarea,.field select{width:100%;padding:14px;border-radius:12px;background:#141214;border:1px solid #30262a;color:white;outline:none}
+.filters{display:flex;gap:8px;overflow:auto;padding:10px 0 15px}.chip{white-space:nowrap;border:1px solid #30282b;background:#141214;color:#c9c2c4;border-radius:30px;padding:9px 15px;font-size:12px}.chip.active{background:var(--red);color:white}
+.notice{border:1px solid #3b2429;background:linear-gradient(110deg,#211116,#151214);padding:13px 15px;border-radius:13px;font-size:12px;margin:4px 0 20px}
+.section-head{display:flex;justify-content:space-between;margin:10px 0 14px;align-items:center}.count{font-size:11px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.card{border:1px solid var(--line);background:linear-gradient(180deg,#181516,#101010);border-radius:17px;overflow:hidden;transition:.25s;animation:rise .45s both}.card:hover{transform:translateY(-4px);border-color:#79303a}
+.thumb{height:215px;position:relative;background:#242022;overflow:hidden}.thumb img,.thumb video{width:100%;height:100%;object-fit:cover}.tag{position:absolute;top:10px;left:10px;background:#141014d9;border-radius:30px;padding:5px 9px;font-size:10px}
+.favorite{position:absolute;right:10px;bottom:10px;width:33px;height:33px;border-radius:50%;background:#111b;color:white;border:1px solid #ffffff44}.favorite.on{color:#ff5364}
+.card-body{padding:12px}.meta{font-size:10px;color:#ff7783;text-transform:uppercase}.card h4{font-size:14px;margin:8px 0 12px;min-height:34px}.actions{display:grid;gap:7px}
+.copy,.ask{border:0;border-radius:9px;padding:10px 8px;font-size:11px;font-weight:bold}.copy{background:linear-gradient(100deg,#f12b3d,#b50e22);color:white}.ask{background:#21191c;border:1px solid #40262d;color:#f2c8cd}
+.empty{grid-column:1/-1;text-align:center;padding:45px 10px;color:var(--muted)}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#0d0b0cf0;border-top:1px solid #302529;z-index:5}.nav{display:flex;justify-content:space-around;padding:12px 5px}.nav button{background:none;border:0;color:#aaa;font-size:10px;display:grid;gap:4px}.nav button span{font-size:19px}.nav button.active{color:#ff5364}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;align-items:center;justify-content:center;padding:16px}.modal.show{display:flex}.dialog{width:min(560px,100%);max-height:90vh;overflow:auto;background:#151214;border:1px solid #503038;border-radius:18px;padding:20px}
+.dialog-top{display:flex;justify-content:space-between;margin-bottom:14px;gap:10px;align-items:center}.close{background:#282124;color:white;border:0;padding:8px;border-radius:9px}
+.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:11px;color:#c7babe;font-weight:bold}.field textarea{min-height:130px;resize:vertical}.form-actions{display:flex;gap:8px;margin-top:15px}.form-actions button{flex:1;padding:12px;border:0;border-radius:10px;font-weight:bold}
+.save{background:var(--red);color:white}.cancel{background:#2a2426;color:white}.detail-image{width:100%;aspect-ratio:9/16;max-height:70vh;object-fit:contain;display:block;margin:0 auto;border-radius:12px;background:#080808}
+.detail-prompt{white-space:pre-wrap;background:#0c0b0b;border:1px solid #32292c;border-radius:12px;padding:13px;font-size:12px;line-height:1.6;margin:12px 0}.media-preview{width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-top:10px;background:#090909}
+.toast{position:fixed;left:50%;bottom:88px;transform:translate(-50%,15px);background:white;color:#111;padding:11px 17px;border-radius:30px;font-size:12px;font-weight:bold;opacity:0;transition:.25s;z-index:20}.toast.show{opacity:1;transform:translate(-50%,0)}
+.screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}.panel{width:min(900px,100%);background:linear-gradient(145deg,#171214,#0d0c0c);border:1px solid #3b252b;border-radius:24px;padding:clamp(22px,5vw,48px);box-shadow:0 25px 90px #0008}
+.landing{text-align:center}.landing h1{font-size:clamp(34px,7vw,62px);margin:14px 0}.landing h1 span{color:var(--red)}.landing p{color:#b9afb2;line-height:1.7;max-width:650px;margin:0 auto 24px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:28px 0}.feature,.plan{background:#100e0f;border:1px solid #33272b;border-radius:15px;padding:17px;text-align:left}.feature b{display:block;margin:8px 0}.feature small,.muted{color:var(--muted);line-height:1.5}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:22px 0}.plan h3{margin:0 0 10px}.price{font-size:30px;font-weight:900;color:#ff5364;margin:12px 0}.plan p{font-size:12px;color:var(--muted);min-height:42px}.plan .primary{width:100%}
+.auth{max-width:440px;margin:auto}.auth h2{margin:0 0 8px}.auth p{color:var(--muted);font-size:13px;line-height:1.5}.auth .primary,.auth .secondary{width:100%;margin-top:8px}
+.link{background:none;border:0;color:#ff6876;text-decoration:underline;margin-top:14px}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:25px}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:850px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:600px){.app{padding:15px 13px 100px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.thumb{height:190px}.card-body{padding:10px}.brand h1{font-size:17px}.admin-btn{padding:9px 10px;font-size:11px}.dialog{padding:15px}.features,.plans{grid-template-columns:1fr}.feature{display:flex;gap:10px;align-items:center}.plan p{min-height:0}}
+@media(max-width:370px){.thumb{height:160px}}
+</style>
+</head>
+<body>
+
+<!-- PÁGINA INICIAL -->
+<section id="homeScreen" class="screen">
+ <div class="panel landing">
+  <div class="brand" style="justify-content:center"><div class="logo">✦</div><div style="text-align:left"><h1 style="font-size:18px;margin:0">BIA PROMPTS IA</h1><small style="color:#aaa;letter-spacing:2px">SUA CRIATIVIDADE SEM LIMITES</small></div></div>
+  <div class="eyebrow" style="margin-top:35px">✨ SUA BIBLIOTECA CRIATIVA</div>
+  <h1>Crie mais. Imagine <span>sem limites.</span></h1>
+  <p>Acesse uma biblioteca de prompts para criar imagens e vídeos com inteligência artificial. Encontre referências, copie prompts e transforme suas ideias em conteúdo.</p>
+  <button class="primary" onclick="showPlans()">QUERO TER ACESSO</button>
+  <div class="features">
+   <div class="feature"><span>📸</span><div><b>Referências visuais</b><small>Fotos e vídeos para inspirar suas criações.</small></div></div>
+   <div class="feature"><span>✍️</span><div><b>Prompts prontos</b><small>Copie e use na sua ferramenta de IA.</small></div></div>
+   <div class="feature"><span>⚡</span><div><b>Acesso organizado</b><small>Categorias para encontrar ideias com facilidade.</small></div></div>
+  </div>
+  <button class="link" onclick="showLogin()">Já tenho uma conta — entrar</button>
+ </div>
+</section>
+
+<!-- PLANOS -->
+<section id="plansScreen" class="screen hidden">
+ <div class="panel">
+  <div class="topline"><div class="brand"><div class="logo">✦</div><div><h1>BIA PROMPTS IA</h1><small>ESCOLHA SEU ACESSO</small></div></div><button class="close" onclick="showHome()">✕</button></div>
+  <div class="eyebrow">PLANOS E VALORES</div><h2 style="font-size:32px;margin:8px 0">Escolha seu plano</h2>
+  <p class="muted">Selecione uma opção para continuar para o pagamento.</p>
+  <div class="plans" style="grid-template-columns:minmax(0,420px);justify-content:center">
+   <article class="plan" style="border-color:#b82b3d"><div class="eyebrow">ACESSO TRIMESTRAL</div><h3>Plano Trimestral</h3><div class="price">R$ 45,00</div><p>Acesso à biblioteca de prompts durante 3 meses.</p><button class="primary" onclick="buyPlan('Trimestral','45,00')">PAGAR PELA CAKTO</button></article>
+  </div>
+  <p class="muted" style="font-size:11px">Após o pagamento, crie sua conta e aguarde a liberação do acesso pela administração.</p>
+  <button class="link" onclick="showLogin()">Já paguei / Já tenho uma conta</button>
+ </div>
+</section>
+
+<!-- LOGIN / CADASTRO -->
+<section id="authScreen" class="screen hidden">
+ <div class="panel auth">
+  <div class="topline"><div class="brand"><div class="logo">✦</div><div><h1>BIA PROMPTS IA</h1><small>ÁREA DE MEMBROS</small></div></div><button class="close" onclick="showHome()">✕</button></div>
+  <div id="loginForm">
+   <h2>Bem-vinda de volta!</h2><p>Entre com seu e-mail e senha para acessar sua biblioteca.</p>
+   <div class="field"><label>E-MAIL</label><input id="loginEmail" type="email" placeholder="seuemail@exemplo.com" autocomplete="username"></div>
+   <div class="field"><label>SENHA</label><input id="loginPassword" type="password" placeholder="Digite sua senha" autocomplete="current-password"></div>
+   <button class="primary" onclick="login()">ENTRAR</button>
+   <button class="link" onclick="showRegister()">Ainda não tem conta? Criar cadastro</button>
+   <button class="link" onclick="forgotPassword()">Esqueci minha senha</button>
+  </div>
+  <div id="registerForm" class="hidden">
+   <h2>Criar minha conta</h2><p>Cadastre seus dados para criar seu acesso.</p>
+   <div class="field"><label>NOME</label><input id="regName" placeholder="Seu nome"></div>
+   <div class="field"><label>E-MAIL</label><input id="regEmail" type="email" placeholder="seuemail@exemplo.com"></div>
+   <div class="field"><label>SENHA</label><input id="regPassword" type="password" placeholder="Crie uma senha (mínimo 6 caracteres)"></div>
+   <button class="primary" onclick="register()">CRIAR CONTA</button>
+   <button class="link" onclick="showLogin()">Já tenho cadastro — entrar</button>
+  </div>
+  <p class="muted" style="font-size:10px;margin-top:25px">Protótipo demonstrativo: contas ficam salvas apenas neste navegador. Para vender com segurança, conecte autenticação e confirmação de pagamento no servidor.</p>
+ </div>
+</section>
+
+<!-- BIBLIOTECA -->
+<div id="libraryScreen" class="hidden">
+<div class="app">
+<header>
+ <div class="brand"><div class="logo">✦</div><div><h1>BIA PROMPTS IA</h1><small>SUA CRIATIVIDADE SEM LIMITES</small></div></div>
+ <div><button class="icon-btn" onclick="setFilter('Favoritos')">♡</button> <button class="admin-btn" id="newPromptBtn" onclick="openAdmin()">＋ Novo prompt</button> <button class="icon-btn" onclick="logout()">Sair</button></div>
+</header>
+<section class="hero"><div class="eyebrow">✦ BIBLIOTECA CRIATIVA</div><h2>Galeria de <span style="color:var(--red)">Prompts</span></h2><p>Escolha, copie e crie imagens incríveis com inteligência artificial.</p></section>
+<div class="search"><input id="search" placeholder="Buscar prompts..." oninput="render()"></div>
+<div class="filters" id="filters"></div>
+<div class="notice">✨ <b>Dica:</b> escolha um prompt, copie com um toque e use na sua IA favorita.</div>
+<div class="section-head"><h3 id="sectionTitle">Explorar prompts</h3><span class="count" id="count"></span></div>
+<main class="grid" id="grid"></main>
+</div>
+<div class="bottom"><nav class="nav">
+<button class="active" onclick="setFilter('Todos',this)"><span>⌂</span>Início</button>
+<button onclick="setFilter('POV',this)"><span>◉</span>POV</button>
+<button onclick="setFilter('UGC',this)"><span>▣</span>UGC</button>
+<button onclick="setFilter('Celular',this)"><span>▤</span>Celular</button>
+<button onclick="setFilter('Movimentos',this)"><span>✧</span>Movimentos</button>
+<button onclick="setFilter('Favoritos',this)"><span>♡</span>Salvos</button>
+</nav></div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()"><div class="dialog" id="dialog"></div></div>
+<div class="toast" id="toast">Prompt copiado!</div>
+
+<script>
+/* PAGAMENTO CAKTO */
+const CHECKOUT_LINKS={
+ "Trimestral":"https://pay.cakto.com.br/vmuox3d_1278008"
+};
+
+/* LOGIN ADMINISTRADOR */
+const ADMIN_EMAIL="biancaborbado123@gmail.com";
+const ADMIN_PASSWORD="biaemaribreno1A";
+
+const seed=[
+{id:1,title:"Selfie no espelho — look elegante",cat:"POV",type:"Feminino",img:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=700&auto=format&fit=crop",prompt:"Crie uma fotografia ultrarrealista em estilo selfie no espelho, preservando fielmente a aparência da pessoa da imagem de referência. A modelo usa um look elegante, pose natural e expressão confiante. Ambiente moderno, iluminação suave, textura realista da pele, fotografia vertical 9:16, alta definição."},
+{id:2,title:"Retrato lifestyle sofisticado",cat:"UGC",type:"Feminino",img:"https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=700&auto=format&fit=crop",prompt:"Fotografia lifestyle ultrarrealista de uma mulher em ambiente sofisticado, pose espontânea, luz natural lateral, composição editorial, detalhes naturais e acabamento de câmera profissional. Manter identidade e características da referência. Formato vertical 9:16."},
+{id:3,title:"Look casual — foto no espelho",cat:"Celular",type:"Moda",img:"https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&auto=format&fit=crop",prompt:"Recrie uma foto casual de moda feita com celular diante do espelho. Preserve exatamente a roupa e a identidade da referência. Enquadramento de corpo inteiro, ambiente clean, luz natural, aparência espontânea e realista, formato 9:16."},
+{id:4,title:"Pose editorial com movimento",cat:"Movimentos",type:"Fashion",img:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=700&auto=format&fit=crop",prompt:"Fotografia fashion editorial capturando um movimento natural da modelo, tecido e cabelo com movimento sutil, pose elegante, luz cinematográfica suave, fundo minimalista e realismo fotográfico. Preservar rosto, corpo e roupa da referência. Vertical 9:16."},
+{id:5,title:"Retrato com luz dourada",cat:"UGC",type:"Retrato",img:"https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=700&auto=format&fit=crop",prompt:"Retrato fotográfico natural durante o pôr do sol, luz dourada suave contornando o rosto, expressão espontânea, pele com textura real, fundo desfocado e estética de fotografia feita em smartphone premium. Preservar a pessoa da imagem original."},
+{id:6,title:"POV — rotina e lifestyle",cat:"POV",type:"Lifestyle",img:"https://images.unsplash.com/photo-1517841905240-472988babdf9?w=700&auto=format&fit=crop",prompt:"Imagem em primeira pessoa com estética UGC autêntica, enquadramento espontâneo, iluminação ambiente natural e detalhes realistas. Aparência de conteúdo capturado no dia a dia com smartphone, sem aspecto artificial, formato vertical 9:16."},
+{id:7,title:"Ensaio minimalista",cat:"Celular",type:"Feminino",img:"https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=700&auto=format&fit=crop",prompt:"Ensaio fotográfico minimalista com fundo neutro, composição limpa, pose delicada e natural, iluminação difusa, alta fidelidade de pele e cabelo. Manter as características da pessoa de referência e resultado fotográfico realista."},
+{id:8,title:"Passo e giro fashion",cat:"Movimentos",type:"Moda",img:"https://images.unsplash.com/photo-1525501484664-8e9a2a1c7e7e?w=700&auto=format&fit=crop",prompt:"Cena fashion com a modelo dando um passo e realizando um giro suave, movimento natural da roupa, câmera acompanhando discretamente, estética de campanha de moda, iluminação profissional e realismo cinematográfico. Vertical 9:16."}
+];
+
+let prompts=JSON.parse(localStorage.getItem('biaPrompts')||'null')||seed;
+let favorites=JSON.parse(localStorage.getItem('biaFavs')||'[]');
+let current='Todos',editing=null,currentUser=null;
+const cats=['Todos','POV','UGC','Celular','Movimentos','Feminino','Moda','Favoritos'];
+
+function screen(id){['homeScreen','plansScreen','authScreen','libraryScreen'].forEach(x=>document.getElementById(x).classList.toggle('hidden',x!==id));}
+function showHome(){screen('homeScreen')}
+function showPlans(){screen('plansScreen')}
+function showLogin(){screen('authScreen');document.getElementById('loginForm').classList.remove('hidden');document.getElementById('registerForm').classList.add('hidden')}
+function showRegister(){document.getElementById('loginForm').classList.add('hidden');document.getElementById('registerForm').classList.remove('hidden')}
+
+function buyPlan(plan,price){
+ const link=CHECKOUT_LINKS[plan];
+ if(!link){alert('Este plano não está disponível para pagamento.');return}
+ window.open(link,'_blank');
+}
+
+function getUsers(){return JSON.parse(localStorage.getItem('biaUsers')||'[]')}
+
+function register(){
+ const name=document.getElementById('regName').value.trim();
+ const email=document.getElementById('regEmail').value.trim().toLowerCase();
+ const password=document.getElementById('regPassword').value;
+
+ if(!name||!email||password.length<6){
+  alert('Preencha nome, e-mail e uma senha com pelo menos 6 caracteres.');
+  return;
+ }
+
+ let users=getUsers();
+
+ if(users.some(u=>u.email===email)){
+  alert('Este e-mail já está cadastrado.');
+  return;
+ }
+
+ users.push({name,email,password,active:false});
+ localStorage.setItem('biaUsers',JSON.stringify(users));
+
+ alert('Cadastro criado! A conta ainda precisa ter o pagamento confirmado pelo administrador.');
+ showLogin();
+ document.getElementById('loginEmail').value=email;
+}
+
+function login(){
+ const email=document.getElementById('loginEmail').value.trim().toLowerCase();
+ const password=document.getElementById('loginPassword').value;
+
+ if(email===ADMIN_EMAIL.toLowerCase()&&password===ADMIN_PASSWORD){
+  currentUser={email,admin:true};
+  enterLibrary();
+  return;
+ }
+
+ const user=getUsers().find(u=>u.email===email&&u.password===password);
+
+ if(!user){
+  alert('E-mail ou senha incorretos.');
+  return;
+ }
+
+ if(!user.active){
+  alert('Seu acesso ainda não foi liberado. Se já pagou, entre em contato com o suporte.');
+  return;
+ }
+
+ currentUser={email:user.email,admin:false};
+ enterLibrary();
+}
+
+function enterLibrary(){
+ screen('libraryScreen');
+ document.getElementById('newPromptBtn').classList.toggle('hidden',!currentUser.admin);
+ render();
+}
+
+function logout(){
+ currentUser=null;
+ showHome();
+}
+
+function forgotPassword(){
+ alert('A recuperação automática exige um serviço de autenticação com envio de e-mail, como o Supabase. Neste HTML demonstrativo, fale com o suporte para redefinir sua senha.');
+}
+
+function manageMembers(){
+ if(!currentUser?.admin){
+  alert('Apenas a administração pode liberar acessos.');
+  return;
+ }
+
+ let users=getUsers();
+
+ if(!users.len
